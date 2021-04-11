@@ -99,6 +99,14 @@ node::node(QWidget *parent) :
         }
     });
 
+    connect(node_pro, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, [=] (int exitCode, QProcess::ExitStatus exitStatus){
+        if(exitCode == 1 && exitStatus == QProcess::NormalExit){
+            debug("文件错误!");
+            unconnected();
+            server_set = -1;
+        }
+    });
+
     connect(ui->close, &QPushButton::clicked, this, [=](){
         if(server_set == 0){
             node_pro->close();
